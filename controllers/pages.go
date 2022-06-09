@@ -13,3 +13,6 @@ func Index(rw http.ResponseWriter, rq *http.Request)  {
   produtos := models.FindProdutos()
   temp.ExecuteTemplate(rw, "Index", produtos)
 }
+func New(rw http.ResponseWriter, rq *http.Request)  {
+  temp.ExecuteTemplate(rw, "New", nil) 
+}
