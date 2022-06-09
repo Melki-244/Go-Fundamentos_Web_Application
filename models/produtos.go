@@ -3,6 +3,7 @@ package models
 import "github.com/Melki-244/Go-Fundamentos_Web_Application/db"
 
 type Produto struct {
+  Id int
   Nome string 
   Descricao string
   Preco float64
@@ -33,6 +34,7 @@ func FindProdutos()  []Produto{
       panic(err.Error())
     }
 
+    p.Id = id
     p.Nome = nome
     p.Descricao = descricao
     p.Preco = preco
@@ -44,13 +46,24 @@ func FindProdutos()  []Produto{
 }
 func CriarProduto(nome, descricao string, preco float64, quantidade int)  {
   db := db.ConectaComOBancoDeDados() 
-  insertDataDb, err := db.Prepare("insert into produtos(nome, descricao, preco, quantidade) values($1, $2, $3, $4)")
+  InsereOProduto, err := db.Prepare("insert into produtos(nome, descricao, preco, quantidade) values($1, $2, $3, $4)")
 
   if err != nil {
     panic(err.Error())
   }
   
-  insertDataDb.Exec(nome, descricao, preco, quantidade)
+  InsereOProduto.Exec(nome, descricao, preco, quantidade)
 
+  defer db.Close()
+}
+func DeletaProduto(id string)  {
+  db := db.ConectaComOBancoDeDados()
+
+  DeletaOProduto, err := db.Prepare("delete from produtos where id=$1")
+
+  if err != nil {
+    panic(err.Error)
+  }
+  DeletaOProduto.Exec(id)
   defer db.Close()
 }
