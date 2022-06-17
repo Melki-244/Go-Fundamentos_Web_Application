@@ -24,7 +24,7 @@ func Insert(w http.ResponseWriter, r *http.Request)  {
       descricao := r.FormValue("descricao")
       preco := r.FormValue("preco")
       quantidade := r.FormValue("quantidade")
-      //Convertendo Valores 
+    //Convertendo Valores 
     precoToFloat64, err := strconv.ParseFloat(preco, 64)
 
     if err != nil {
@@ -42,11 +42,11 @@ func Insert(w http.ResponseWriter, r *http.Request)  {
 }
 func Delete(w http.ResponseWriter, r *http.Request)  {
   IdProduto := r.URL.Query().Get("id")     
-
   models.DeletaProduto(IdProduto)
-
   http.Redirect(w, r, "/", 301)
 }
 func Edit(w http.ResponseWriter, r *http.Request)  {
-  temp.ExecuteTemplate(w, "Edit", nil)
+  IdProduto := r.URL.Query().Get("id")
+  produto := models.EditaProduto(IdProduto)
+  temp.ExecuteTemplate(w, "Edit", produto)
 }
