@@ -14,7 +14,7 @@ func FindProdutos()  []Produto{
   db := db.ConectaComOBancoDeDados()
   defer db.Close()
 
-  selectDeTodosOsProdutos, err :=  db.Query("select * from produtos")
+  selectDeTodosOsProdutos, err :=  db.Query("select * from produtos order by id asc")
 
   if err != nil {
     panic(err.Error())
@@ -77,7 +77,7 @@ func EditaProduto(id string) Produto {
     panic(err.Error())
   }
 
-  produto := Produto{}
+  produtoEdicao := Produto{}
 
   for produtoDoBanco.Next() {
     var nome, descricao string
@@ -86,12 +86,23 @@ func EditaProduto(id string) Produto {
 
     produtoDoBanco.Scan(&id, &nome, &descricao, &preco, &quantidade)
 
-    produto.Id = id 
-    produto.Nome = nome
-    produto.Descricao = descricao
-    produto.Preco = preco
-    produto.Quantidade = quantidade
+    produtoEdicao.Id = id 
+    produtoEdicao.Nome = nome
+    produtoEdicao.Descricao = descricao
+    produtoEdicao.Preco = preco
+    produtoEdicao.Quantidade = quantidade
   }
 
-   return produto
+   return produtoEdicao
+}
+func AtualizaProduto(id int, nome, descricao string, preco float64, quantidade int)  {
+  db := db.ConectaComOBancoDeDados() 
+  defer db.Close()
+  
+  AtualizaProduto, err := db.Prepare("update produtos set nome=$1, descricao=$2, preco=$3, quantidade=$4 where id=$5") 
+  if err != nil {
+    panic(err.Error())
+  }
+
+  AtualizaProduto.Exec(nome, descricao, preco, quantidade, id)
 }
